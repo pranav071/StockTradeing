@@ -1,0 +1,128 @@
+import random
+
+class Account:
+    def __init__(self):
+        self.dogecoin = 0
+        self.bitcoin = 0
+        self.balance = 50000
+        self.withdraw = 0
+        self.deposit = 0
+        self.total_equity = 100
+        self.transactions = []
+        self.dogecoin_value = 100
+        self.bitcoin_value = 500
+        self.crypto_invest = 0
+        self.crypto_return = 0
+
+    def Deposit(self, money):
+        self.deposit += money
+        self.balance += money
+        self.transactions.append(("Deposit:", money))
+        return True
+
+    def Get_account_information(self):
+        print("Money Details:")
+        print("Bank Balance:", self.balance)
+        print("Dogecoin:", self.dogecoin)
+        print("Bitcoin:", self.bitcoin)
+
+    def Withdraw(self, money):
+        if money > self.balance:
+            return False
+        self.withdraw += money
+        self.balance -= money
+        self.transactions.append(("Withdraw:", money))
+        return True
+
+    def buy_crypto(self):
+        option = int(input("Want to purchase dogecoin press 1 else for bitcoin press 2\n"))
+        if self.total_equity != 0:
+            luck = random.randint(0, 250)
+            if luck == 0:
+                if option == 1:
+                    self.dogecoin += 1
+                    self.balance -= self.dogecoin_value
+                    self.crypto_invest += self.dogecoin * self.dogecoin_value
+                else:
+                    self.bitcoin += 1
+                    self.balance -= self.bitcoin_value
+                    self.crypto_invest += self.bitcoin_value
+            else:
+                return False
+        else:
+            return False
+        return True
+
+    def sell_crypto(self):
+        option = int(input("Want to sell dogecoin press 1 else for bitcoin press 2\n"))
+        if option == 2:
+            if self.bitcoin == 0:
+                return False
+            self.crypto_return += self.bitcoin_value
+            self.balance += self.bitcoin_value
+            self.transactions.append(("Bitcoin Sold:", self.bitcoin_value))
+            self.bitcoin -= 1
+        else:
+            if self.dogecoin == 0:
+                return False
+            self.crypto_return += self.dogecoin_value
+            self.balance += self.dogecoin_value
+            self.transactions.append(("Dogecoin Sold:", self.dogecoin_value))
+            self.dogecoin -= 1
+        return True
+
+    def History(self):
+        print("Displaying All transactions")
+        for transaction in self.transactions:
+            print(transaction[0], transaction[1])
+        temp = input("Do you want to clear all transactions:")
+        no = len(self.transactions)
+        if temp.lower() == 'y':
+            self.transactions.clear()
+            print("Total transactions cleared:", no)
+        else:
+            print("Total transaction:", no)
+
+
+if __name__ == "__main__":
+    person = Account()
+    while True:
+        print("****************************************************")
+        print("\nPress 1 if want to have your Account Info")
+        print("Press 2 if want to Deposit your money")
+        print("Press 3 if want to withdraw your money")
+        print("Press 4 if want to know your history")
+        print("Press 5 if want to know your Buy Crypto")
+        print("Press 6 if want to know your Sell Crypto")
+        print("Else press any invalid key for exit\n")
+
+        choice = int(input("Enter your choice: "))
+
+        if choice == 1:
+            person.Get_account_information()
+        elif choice == 2:
+            amount = int(input("Enter amount to deposit: "))
+            if person.Deposit(amount):
+                print("Successfully deposited money")
+            else:
+                print("Failed")
+        elif choice == 3:
+            amount = int(input("Enter amount to withdraw: "))
+            if person.Withdraw(amount):
+                print("Successfully withdrawn Amount")
+            else:
+                print("Not Enough Balance")
+        elif choice == 4:
+            person.History()
+        elif choice == 5:
+            if person.buy_crypto():
+                print("Successful Transaction")
+            else:
+                print("Better Luck next time")
+        elif choice == 6:
+            if person.sell_crypto():
+                print("Successful Transaction")
+            else:
+                print("Not Enough Cryptocoins")
+        else:
+            break
